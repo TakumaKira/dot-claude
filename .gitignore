@@ -1,0 +1,30 @@
+# macOS
+.DS_Store
+
+# Auto-generated / machine-specific
+.claude/config.json
+.claude/settings.local.json
+.claude/stats-cache.json
+
+# Logs and history
+.claude/history.jsonl
+
+# Caches
+.claude/cache/
+.claude/plugins/cache/
+.claude/plugins/install-counts-cache.json
+.claude/plugins/marketplaces/
+
+# Session data (large, machine-specific)
+.claude/chrome/
+.claude/debug/
+.claude/downloads/
+.claude/file-history/
+.claude/ide/
+.claude/plans/
+.claude/projects/
+.claude/session-env/
+.claude/shell-snapshots/
+.claude/statsig/
+.claude/telemetry/
+.claude/todos/
