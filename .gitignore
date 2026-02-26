@@ -15,6 +15,23 @@
 .claude/plugins/install-counts-cache.json
 .claude/plugins/marketplaces/
 
+# Backups (auto-generated)
+.claude/backups/
+
+# Session/command history
+.claude/bash-command-log.txt
+
+# MCP auth cache
+.claude/mcp-needs-auth-cache.json
+
+# User-specific plugin management
+.claude/plugins/blocklist.json
+.claude/plugins/installed_plugins.json
+.claude/plugins/known_marketplaces.json
+
+# User task data
+.claude/tasks/
+
 # Session data (large, machine-specific)
 .claude/chrome/
 .claude/debug/
