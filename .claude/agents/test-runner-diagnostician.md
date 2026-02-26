@@ -28,30 +28,13 @@ This agent uses Bash for test execution. To avoid system issues:
 
 ## Workflow
 
-### Phase 1: Detect Test Framework
+### Phase 1: Discover All Test Suites
 
-Check these files to identify the test framework:
-1. `package.json` → scripts.test (npm/yarn)
-2. `pytest.ini` or `pyproject.toml` → Python pytest
-3. `jest.config.*` → Jest
-4. `vitest.config.*` → Vitest
-5. `playwright.config.*` → Playwright
+Read the project's build or task configuration file and collect every script or target whose name contains words like `test`, `spec`, `e2e`, or `integration`. Treat each one as a separate suite to run in Phase 2. Do not assume only one test script exists.
 
 ### Phase 2: Execute Tests
 
-Run tests with appropriate commands:
-
-```bash
-# JavaScript/TypeScript
-npm test 2>&1
-
-# Python
-pytest --tb=short 2>&1
-
-# With specific file
-npm test -- path/to/test.ts 2>&1
-pytest path/to/test_file.py 2>&1
-```
+Run every suite discovered in Phase 1 individually and sequentially — do not skip any, including e2e and integration suites. Use the exact command for each suite as defined in the project config. Record results per suite; do not merge output from multiple suites.
 
 Always capture both stdout and stderr with `2>&1`.
 
