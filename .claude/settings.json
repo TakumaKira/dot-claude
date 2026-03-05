@@ -1,4 +1,30 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(/Users/takuma-private/Git/Nila-test-model/Nila-test-model/services/oauth/index.ts:*)",
+      "Bash(/Users/takuma-private/Git/Nila-test-model/Nila-test-model/__tests__/e2e/globalTeardown.ts:*)",
+      "Bash(/Users/takuma-private/Git/Nila-test-model/Nila-test-model/__tests__/e2e/globalSetup.ts:*)",
+      "Bash(supabase db reset:*)",
+      "Bash(DOCKER_HOST=unix:///var/run/docker.sock supabase db reset:*)",
+      "Bash(npm run supabase:start:*)",
+      "Bash(supabase stop:*)",
+      "Read(//var/run/**)",
+      "Bash(docker context ls:*)",
+      "Bash(DOCKER_HOST=unix:///var/run/docker.sock supabase stop:*)",
+      "Bash(DOCKER_HOST=unix:///var/run/docker.sock npm run supabase:start:*)",
+      "Bash(DOCKER_HOST=unix:///var/run/docker.sock docker volume ls:*)",
+      "Bash(DOCKER_HOST=unix:///var/run/docker.sock docker volume rm:*)",
+      "Bash(npx supabase:*)",
+      "Bash(npm run supabase:stop:*)",
+      "Bash(npm run supabase:reset:*)",
+      "Bash(timeout 30 npm run dev:*)",
+      "Bash(NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321 NEXT_PUBLIC_SUPABASE_ANON_KEY=test SUPABASE_SERVICE_ROLE_KEY=test NEXT_PUBLIC_GOOGLE_CLIENT_ID=test GOOGLE_CLIENT_SECRET=test NEXT_PUBLIC_APP_URL=http://localhost:3000 STRIPE_SECRET_KEY=sk_test_placeholder STRIPE_WEBHOOK_SECRET=whsec_test ANTHROPIC_API_KEY=test node -e \"\nconst { execSync } = require\\(''child_process''\\);\nconst result = execSync\\(''npx next dev --port 3000'', {\n  cwd: ''/Users/takuma-private/Git/Nila-test-model/Nila-test-model'',\n  timeout: 25000,\n  env: {\n    ...process.env,\n    NEXT_PUBLIC_SUPABASE_URL: ''http://localhost:54321'',\n    NEXT_PUBLIC_SUPABASE_ANON_KEY: ''test'',\n    SUPABASE_SERVICE_ROLE_KEY: ''test'',\n    NEXT_PUBLIC_GOOGLE_CLIENT_ID: ''test'',\n    GOOGLE_CLIENT_SECRET: ''test'',\n    NEXT_PUBLIC_APP_URL: ''http://localhost:3000'',\n    STRIPE_SECRET_KEY: ''sk_test_placeholder'',\n    STRIPE_WEBHOOK_SECRET: ''whsec_test'',\n    ANTHROPIC_API_KEY: ''test''\n  }\n}\\).toString\\(\\);\nconsole.log\\(result\\);\n\")",
+      "Bash(node -e:*)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
+    ]
+  },
   "enabledPlugins": {
     "code-simplifier@claude-plugins-official": true,
     "claude-mem@thedotmack": true

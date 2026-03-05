@@ -10,6 +10,7 @@
 .claude/history.jsonl
 
 # Caches
+.claude/paste-cache/
 .claude/cache/
 .claude/plugins/cache/
 .claude/plugins/install-counts-cache.json
