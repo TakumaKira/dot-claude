@@ -30,6 +30,10 @@
 .claude/plugins/installed_plugins.json
 .claude/plugins/known_marketplaces.json
 
+# Skills installed as symlinks via `npx skills add` (machine-local paths)
+.claude/skills/find-skills
+.claude/skills/skill-creator
+
 # User task data
 .claude/tasks/
 
