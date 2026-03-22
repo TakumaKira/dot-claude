@@ -38,6 +38,7 @@
 .claude/tasks/
 
 # Session data (large, machine-specific)
+.claude/sessions/
 .claude/chrome/
 .claude/debug/
 .claude/downloads/
