@@ -33,6 +33,9 @@
 # Skills installed as symlinks via `npx skills add` (machine-local paths)
 .claude/skills/find-skills
 .claude/skills/skill-creator
+.claude/skills/stripe-best-practices
+.claude/skills/stripe-projects
+.claude/skills/upgrade-stripe
 
 # User task data
 .claude/tasks/
