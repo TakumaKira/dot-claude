@@ -1,0 +1,60 @@
+# macOS
+.DS_Store
+
+# Auto-generated / machine-specific
+.claude/config.json
+.claude/settings.json
+.claude/settings.local.json
+.claude/stats-cache.json
+
+# Logs and history
+.claude/history.jsonl
+
+# Caches
+.claude/paste-cache/
+.claude/cache/
+.claude/plugins/cache/
+.claude/plugins/install-counts-cache.json
+.claude/plugins/marketplaces/
+
+# Backups (auto-generated)
+.claude/backups/
+
+# Session/command history
+.claude/bash-command-log.txt
+
+# MCP auth cache
+.claude/mcp-needs-auth-cache.json
+
+# User-specific plugin management
+.claude/plugins/blocklist.json
+.claude/plugins/installed_plugins.json
+.claude/plugins/known_marketplaces.json
+
+# Skills installed via `npx skills add` (machine-local)
+.claude/skills/find-skills
+.claude/skills/skill-creator
+.claude/skills/stripe-best-practices
+.claude/skills/stripe-projects
+.claude/skills/upgrade-stripe
+
+# User task data
+.claude/tasks/
+
+# Usage / telemetry data
+.claude/usage-data/
+
+# Session data (large, machine-specific)
+.claude/sessions/
+.claude/chrome/
+.claude/debug/
+.claude/downloads/
+.claude/file-history/
+.claude/ide/
+.claude/plans/
+.claude/projects/
+.claude/session-env/
+.claude/shell-snapshots/
+.claude/statsig/
+.claude/telemetry/
+.claude/todos/
