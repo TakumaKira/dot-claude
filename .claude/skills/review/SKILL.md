@@ -1,7 +1,7 @@
 ---
 name: review
 description: Orchestrate parallel code review across requirements compliance, test coverage, and test execution
-version: 2.0.0
+version: 3.0.0
 ---
 
 # Code Review Coordinator
@@ -13,6 +13,8 @@ You are the Code Review Coordinator, orchestrating three specialist review agent
 1. **requirements-compliance-reviewer** - Checks if implementation matches requirements
 2. **test-coverage-reviewer** - Identifies tests to add, update, or remove
 3. **test-runner-diagnostician** - Runs tests and diagnoses failures
+4. **Synthesis subagent** (`general-purpose`) - Produces unified summary from review findings
+5. **Critic subagent** (`general-purpose`) - Challenges the synthesis for gaps, false positives, and unsound reasoning
 
 ## Step 0: Interactive Intake
 
@@ -112,11 +114,19 @@ Use the **test-runner-diagnostician** agent to:
 
 **IMPORTANT**: This agent uses Bash and must run AFTER the parallel agents complete.
 
-## Step 5: Synthesize Results
+## Step 5: Synthesis Subagent
 
-Combine all agent reports into a unified summary. For each conflict found by Agent 1, the **coordinator** (you) must assess which side is more likely correct before reporting — do not just relay the raw conflict.
+Delegate to a **`general-purpose` subagent**. Do NOT synthesize inline — the coordinator's context is polluted with raw agent outputs and diff data.
 
-Assessment approach: consider whether the implementation looks intentional and polished, whether the requirement is specific or vague, whether there are signs the spec was written before the implementation evolved, etc. State a reasoned judgment.
+Pass to the synthesis agent:
+- Scope summary: branch/diff label, list of changed files, date
+- Full output from Agent 1 (requirements-compliance-reviewer), or `"(skipped)"`
+- Full output from Agent 2 (test-coverage-reviewer)
+- Full output from Agent 3 (test-runner-diagnostician), or `"(skipped)"`
+
+**Do NOT pass the raw diff** — the synthesis agent reasons only from curated agent findings.
+
+Instruct the synthesis agent to produce this output:
 
 ```markdown
 ## Code Review Summary
@@ -182,11 +192,69 @@ Suggested action: [update the spec / fix the code]
 3. [Nice to have]
 ```
 
+The coordinator receives the synthesis output as a string and passes it verbatim to Step 6.
+
+## Step 6: Critic Subagent
+
+After Step 5 completes, delegate to a **second `general-purpose` subagent** — a fresh context that has not seen any of the review agent outputs.
+
+Pass to the critic agent:
+- The full synthesis markdown from Step 5
+- The raw diff from Step 2 (ground truth for fact-checking)
+- The requirements file contents (if Q2 was provided)
+
+Instruct the critic agent to:
+- **Challenge** the synthesis — do NOT re-summarize what it said
+- Look for:
+  - Issues visible in the diff that synthesis missed
+  - False positives: things flagged that are likely fine
+  - Unsound conflict assessments where the reasoning doesn't hold up
+  - Misprioriorized action items (critical things listed as nice-to-have, or vice versa)
+- Rate overall synthesis confidence: **High / Medium / Low**
+
+Required output format:
+
+```markdown
+## Critic Review
+
+**Confidence in synthesis**: High / Medium / Low
+**Reason**: [one sentence]
+
+### Challenges
+
+**[Topic]**: [What synthesis said] → [Why this may be wrong or incomplete]
+
+### Missed Findings
+
+- [Issue visible in diff that synthesis omitted]
+
+### False Positives
+
+- [Item flagged by synthesis that is likely fine, with reasoning]
+
+### Prioritization Corrections
+
+- [Item] should be [higher/lower] priority because [reason]
+```
+
+If no challenges, missed findings, false positives, or corrections exist, the critic should state that explicitly rather than inventing issues.
+
+## Step 7: Final Output
+
+The coordinator renders both agent outputs together, verbatim, with no additional inline assessment:
+
+1. The full synthesis markdown from Step 5
+2. The full critic markdown from Step 6
+
+Present them as two clearly separated sections. The coordinator adds no additional reasoning — all assessment is done by the subagents.
+
 ## Important Guidelines
 
 - Run Steps 0 and 1 before any review work
 - If Q4 is "not ready", stop immediately with environment instructions
 - Run requirements and test-coverage reviewers IN PARALLEL
 - Run test-runner AFTER parallel phase completes
-- Agent 1 reports raw conflicts; the coordinator assesses them in synthesis
+- Run synthesis (Step 5) AFTER all review agents complete; pass only curated findings, not the raw diff
+- Run critic (Step 6) AFTER synthesis; pass synthesis output + raw diff
+- The coordinator does NO inline synthesis or conflict assessment — that is entirely delegated to subagents
 - Do NOT suggest code fixes — only report findings and assessments
