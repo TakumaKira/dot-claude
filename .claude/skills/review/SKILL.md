@@ -13,8 +13,8 @@ You are the Code Review Coordinator, orchestrating three specialist review agent
 1. **requirements-compliance-reviewer** - Checks if implementation matches requirements
 2. **test-coverage-reviewer** - Identifies tests to add, update, or remove
 3. **test-runner-diagnostician** - Runs tests and diagnoses failures
-4. **Synthesis subagent** (`general-purpose`) - Produces unified summary from review findings
-5. **Critic subagent** (`general-purpose`) - Challenges the synthesis for gaps, false positives, and unsound reasoning
+4. **review-synthesizer** - Produces unified summary from review findings
+5. **review-critic** - Challenges the synthesis for gaps, false positives, and unsound reasoning
 
 ## Step 0: Interactive Intake
 
@@ -116,9 +116,9 @@ Use the **test-runner-diagnostician** agent to:
 
 ## Step 5: Synthesis Subagent
 
-Delegate to a **`general-purpose` subagent**. Do NOT synthesize inline — the coordinator's context is polluted with raw agent outputs and diff data.
+Delegate to the **`review-synthesizer`** agent. Do NOT synthesize inline — the coordinator's context is polluted with raw agent outputs and diff data.
 
-Pass to the synthesis agent:
+Pass to the agent:
 - Scope summary: branch/diff label, list of changed files, date
 - Full output from Agent 1 (requirements-compliance-reviewer), or `"(skipped)"`
 - Full output from Agent 2 (test-coverage-reviewer)
@@ -126,118 +126,16 @@ Pass to the synthesis agent:
 
 **Do NOT pass the raw diff** — the synthesis agent reasons only from curated agent findings.
 
-Instruct the synthesis agent to produce this output:
-
-```markdown
-## Code Review Summary
-
-**Scope**: [detected scope]
-**Files Reviewed**: [count]
-**Date**: [current date]
-
----
-
-### Requirements Compliance
-
-[Summary from requirements-compliance-reviewer]
-- Compliant: X
-- Partial: X
-- Non-Compliant: X
-
-Key findings:
-- [bullet points]
-
----
-
-### Conflicts Assessment
-
-For each conflict between requirements and implementation:
-
-**[Requirement X] vs [Implementation Y]**
-Assessment: The [requirement / implementation] appears more likely correct because [reasoning].
-Suggested action: [update the spec / fix the code]
-
----
-
-### Test Coverage
-
-[Summary from test-coverage-reviewer]
-
-**Tests to Add**:
-- [natural language descriptions]
-
-**Tests to Update**:
-- [natural language descriptions]
-
-**Tests to Remove**:
-- [natural language descriptions]
-
----
-
-### Test Results
-
-[Summary from test-runner-diagnostician, or "Skipped — no test command provided"]
-
-**Status**: [All passed / X failures / Skipped]
-
-**Root Causes** (if failures):
-- [failure] → [root cause]
-
----
-
-### Action Items (Prioritized)
-
-1. [Critical items first]
-2. [Important items]
-3. [Nice to have]
-```
-
 The coordinator receives the synthesis output as a string and passes it verbatim to Step 6.
 
 ## Step 6: Critic Subagent
 
-After Step 5 completes, delegate to a **second `general-purpose` subagent** — a fresh context that has not seen any of the review agent outputs.
+After Step 5 completes, delegate to the **`review-critic`** agent — it starts with a fresh context and has not seen any of the review agent outputs.
 
-Pass to the critic agent:
+Pass to the agent:
 - The full synthesis markdown from Step 5
 - The raw diff from Step 2 (ground truth for fact-checking)
 - The requirements file contents (if Q2 was provided)
-
-Instruct the critic agent to:
-- **Challenge** the synthesis — do NOT re-summarize what it said
-- Look for:
-  - Issues visible in the diff that synthesis missed
-  - False positives: things flagged that are likely fine
-  - Unsound conflict assessments where the reasoning doesn't hold up
-  - Misprioriorized action items (critical things listed as nice-to-have, or vice versa)
-- Rate overall synthesis confidence: **High / Medium / Low**
-
-Required output format:
-
-```markdown
-## Critic Review
-
-**Confidence in synthesis**: High / Medium / Low
-**Reason**: [one sentence]
-
-### Challenges
-
-**[Topic]**: [What synthesis said] → [Why this may be wrong or incomplete]
-
-### Missed Findings
-
-- [Issue visible in diff that synthesis omitted]
-
-### False Positives
-
-- [Item flagged by synthesis that is likely fine, with reasoning]
-
-### Prioritization Corrections
-
-- [Item] should be [higher/lower] priority because [reason]
-```
-
-If no challenges, missed findings, false positives, or corrections exist, the critic should state that explicitly rather than inventing issues.
 
 ## Step 7: Final Output
 
