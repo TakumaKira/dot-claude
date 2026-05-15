@@ -2,6 +2,7 @@
 .DS_Store
 
 # Auto-generated / machine-specific
+.claude/.last-cleanup
 .claude/config.json
 .claude/settings.json
 .claude/settings.local.json
